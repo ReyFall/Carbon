@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CarbonJS</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            background-color: rgb(133, 84, 196);
+            color: #fff;
+            font-size: 24px;
+            font-family: sans-serif;
+        }
+        .title{
+            font-size: 70px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">CarbonJS</div>
+    <div>
+        <span id="now1"></span><br />
+        <span id="now2"></span><br />
+        <hr />
+        <span id="res"></span>
+    </div>
+    <script src="./Carbon.js"></script>
+    <script>
+        var d = new Carbon(new Date());
+        document.getElementById("now1").innerText = "Now: " + d.getDate();
+        document.getElementById("now2").innerText = "Now UNIX: " + d.dateUNIX;
+        document.getElementById("res").innerText = new Carbon().secondsUntilEndOfDay();//d.addDay().addWeek().butify();
+    </script>
+</body>
+</html>
