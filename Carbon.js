@@ -2,34 +2,47 @@
 "use strict";
 
 class Carbon{
-    constructor(date=new Date(), utc="UTC+3"){
+    constructor(date=new Date(), format="yyyy-M-d w h:m:s.S utc", utc="UTC+3"){
         this.utc = utc;
-        this.dateUNIX = Date.parse(date);
+        this.dateUNIX = Date.parse(date);//////
+        this.format = format;
+        this.reference = {//2012.02.07 н.э. at 15:13:08 EET
+            year: "yy",
+            yearFull: "yyyy",
+            month: "M",
+            monthPart: "MM",
+            monthName: "MMM",
+            day: "d",
+            hours: "h",
+            minutes: "m",
+            seconds: "s",
+            miliseconds: "S",
+            dayOfWeek: "w"
+        };
         this.monthsNamesEN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         this.monthsNamesRU = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-        this.format = "d-m-y h:mm:s";
     }
 
     now(){
-        let date =  this.parseUNIX(Date.parse(new Date()));
+        let date = this.parseUNIX(Date.parse(new Date()));
         let format = this.format;
-        format = format.replace("d", date.day);
-        format = format.replace(/mm/, date.minutes);
-        format = format.replace(/m/, date.month);
-        format = format.replace("y", date.year);
-        format = format.replace("h", date.hours);
-        format = format.replace("s", date.seconds);
+        format = format.replace(this.reference.day, date.day);
+        format = format.replace(this.reference.minutes, date.minutes);
+        format = format.replace(this.reference.month, date.month);
+        format = format.replace(this.reference.yearFull, date.year);
+        format = format.replace(this.reference.hours, date.hours);
+        format = format.replace(this.reference.seconds, date.seconds);
         return format;
     }
     todayStart(){
         let date =  this.parseUNIX(Date.parse(new Date()));
         let format = this.format;
-        format = format.replace("d", date.day);
-        format = format.replace(/mm/, "00");
-        format = format.replace(/m/, date.month);
-        format = format.replace("y", date.year);
-        format = format.replace("h", "00");
-        format = format.replace("s", "00");
+        format = format.replace(this.reference.day, date.day);
+        format = format.replace(this.reference.minutes, "00");
+        format = format.replace(this.reference.month, date.month);
+        format = format.replace(this.reference.yearFull, date.year);
+        format = format.replace(this.reference.hours, "00");
+        format = format.replace(this.reference.seconds, "00");
         return format;
     }
     todayStartUNIX(){
@@ -38,12 +51,12 @@ class Carbon{
     todayEnd(){
         let date =  this.parseUNIX(Date.parse(new Date()));
         let format = this.format;
-        format = format.replace("d", date.day);
-        format = format.replace(/mm/, "59");
-        format = format.replace(/m/, date.month);
-        format = format.replace("y", date.year);
-        format = format.replace("h", "23");
-        format = format.replace("s", "59");
+        format = format.replace(this.reference.day, date.day);
+        format = format.replace(this.reference.minutes, "59");
+        format = format.replace(this.reference.month, date.month);
+        format = format.replace(this.reference.yearFull, date.year);
+        format = format.replace(this.reference.hours, "23");
+        format = format.replace(this.reference.seconds, "59");
         return format;
     }
     todayEndUNIX(){
@@ -60,12 +73,13 @@ class Carbon{
     parseUNIX(dateUNIX){
         let date = new Date(dateUNIX);
         return {
-            day: date.getDate() < 10 ? "0"+date.getDate() : date.getDate(),
-            month: date.getMonth()+1 < 10 ? "0"+(date.getMonth()+1) : date.getMonth()+1,
-            year: date.getFullYear(),
-            hours: date.getHours() < 10 ? "0"+date.getHours() : date.getHours(),
-            minutes: date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes(),
-            seconds: date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds(),
+            day: date.getDate() < 10 ? "0"+date.getDate() : ""+date.getDate(),
+            month: date.getMonth()+1 < 10 ? "0"+(date.getMonth()+1) : ""+date.getMonth()+1,
+            year: ""+date.getFullYear(),
+            hours: date.getHours() < 10 ? "0"+date.getHours() : ""+date.getHours(),
+            minutes: date.getMinutes() < 10 ? "0"+date.getMinutes() : ""+date.getMinutes(),
+            seconds: date.getSeconds() < 10 ? "0"+date.getSeconds() : ""+date.getSeconds(),
+            miliseconds: date.getMilliseconds() < 10 ? "0"+date.getMilliseconds() : ""+date.getMilliseconds()
         };
     }
 
@@ -73,10 +87,10 @@ class Carbon{
         return this.butify();
     }
     startOfDay(){
-        return this.butify("d-m-y 00:00:00");
+        return this.butify(this.reference.day+"-"+this.reference.month+"-"+this.reference.yearFull+" 00:00:00");
     }
     endOfDay(){
-        return this.butify("d-m-y 23:59:59");
+        return this.butify(this.reference.day+"-"+this.reference.month+"-"+this.reference.yearFull+" 23:59:59");
     }
     addDay(amontDays=1){
         this.dateUNIX += amontDays * 86400000;
@@ -110,14 +124,18 @@ class Carbon{
             format = this.format;
         }
 
-        format = format.replace("d", date.day);
-        format = format.replace(/mm/, date.minutes);
-        format = format.replace(/m/, date.month);
-        format = format.replace("y", date.year);
-        format = format.replace("h", date.hours);
-        format = format.replace("s", date.seconds);
-        format = format.replace(/M/, monthNames[date.month-1]);
-        
+        format = format.replace(this.reference.day, date.day);
+        format = format.replace(this.reference.minutes, date.minutes);
+        format = format.replace(this.reference.yearFull, date.year);
+        format = format.replace(this.reference.year, date.year.substring(2));
+        format = format.replace(this.reference.hours, date.hours);
+        format = format.replace(this.reference.seconds, date.seconds);
+        format = format.replace(this.reference.miliseconds, date.miliseconds);
+        format = format.replace(this.reference.monthName, monthNames[date.month-1]);
+        format = format.replace(this.reference.monthPart, monthNames[date.month-1].substring(0, 3));
+        format = format.replace(this.reference.month, date.month);
+        format = format.replace(this.reference.dayOfWeek, date.dayOfWeek);
+
         return format;
     }
 }
