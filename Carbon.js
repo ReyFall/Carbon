@@ -92,6 +92,18 @@ class Carbon{
     endOfDay(){
         return this.butify(this.reference.day+"-"+this.reference.month+"-"+this.reference.yearFull+" 23:59:59");
     }
+    addSecond(amontDays=1){
+        this.dateUNIX += amontDays * 1000;
+        return this;
+    }
+    addMinute(amontDays=1){
+        this.dateUNIX += amontDays * 60000;
+        return this;
+    }
+    addHour(amontDays=1){
+        this.dateUNIX += amontDays * 3600000;
+        return this;
+    }
     addDay(amontDays=1){
         this.dateUNIX += amontDays * 86400000;
         return this;
