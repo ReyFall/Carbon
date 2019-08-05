@@ -1,8 +1,8 @@
-/* Carbon library for JS v 0.0.1 */
+/* Carbon library for JS v 0.1.0 */
 "use strict";
 
 class Carbon{
-    constructor(date=new Date(), format="yyyy-M-d w h:m:s.S utc", utc="UTC+3"){
+    constructor(date=new Date(), format="yyyy-M-d h:m:s", utc="UTC+3"){
         this.utc = utc;
         this.dateUNIX = Date.parse(date);//////
         this.format = format;
@@ -87,11 +87,33 @@ class Carbon{
         return this.butify();
     }
     startOfDay(){
-        return this.butify(this.reference.day+"-"+this.reference.month+"-"+this.reference.yearFull+" 00:00:00");
+        let date = this.parseUNIX(this.dateUNIX);
+        this.dateUNIX = Date.parse(`${date.year}-${date.month}-${date.day} 00:00:00`);
+        return this;
     }
     endOfDay(){
-        return this.butify(this.reference.day+"-"+this.reference.month+"-"+this.reference.yearFull+" 23:59:59");
+        let date = this.parseUNIX(this.dateUNIX);
+        this.dateUNIX = Date.parse(`${date.year}-${date.month}-${date.day} 23:59:59`);
+        return this;
     }
+    startOfMonth(){///////////////////////test
+        let date = this.parseUNIX(this.dateUNIX);
+        this.dateUNIX = Date.parse(`${date.year}-${date.month}-01 ${date.hours}:${date.minutes}:${date.seconds}`);
+        return this;
+    }
+    endOfMonth(){///////////////////////test
+        let date = this.parseUNIX(this.dateUNIX);
+        if(date.month === "12"){
+            this.dateUNIX = Date.parse(`${Number(date.year)+1}-01-01 ${date.hours}:${date.minutes}:${date.seconds}`);
+        }
+        else{
+            let month = Number(date.month)+1;
+            month = month < 10 ? "0"+month : month;
+            this.dateUNIX = Date.parse(`${date.year}-${month}-01 ${date.hours}:${date.minutes}:${date.seconds}`);
+        }
+        return this.addDay(-1);
+    }
+
     addSecond(amontDays=1){
         this.dateUNIX += amontDays * 1000;
         return this;
